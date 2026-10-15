@@ -39,6 +39,13 @@ public class NumberTheorieAlgorithms {
             result -= result/m;
         }
         return result;
+    }
 
+    public static int modularInverse(int a, int p) {
+        int[] result = eea (p,a);
+        if (result[1] != 1){
+            throw new IllegalArgumentException("There is no modular Inverse");
+        }
+        return ((result[2]%p)+p)%p;
     }
 }
