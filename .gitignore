@@ -1,0 +1,7 @@
+# Build output
+target/
+out/
+
+# IntelliJ (the project is defined by pom.xml)
+.idea/
+*.iml
