@@ -1,4 +1,6 @@
-public class NumberTheorieAlgorithms {
+package aba.math;
+
+public class NumberTheorie {
     public static int gcd(int inputr0, int inputr1){
         if(inputr1 == 0){
             return inputr0;
