@@ -18,8 +18,8 @@ public class NumberTheorieTest {
         Random random = new Random(42);
         for (int i = 0; i < 10000; i++){
 
-            int a = random.nextInt(0, 1000000);
-            int b = random.nextInt(0, 1000000);
+            int a = random.nextInt(-1000000, 1000000);
+            int b = random.nextInt(-1000000, 1000000);
 
             int result = gcd(a, b);
 
@@ -48,8 +48,8 @@ public class NumberTheorieTest {
         Random random = new Random(42);
         for (int i = 0; i < 10000; i++) {
 
-            int a = random.nextInt(0, 1000000);
-            int b = random.nextInt(0, 1000000);
+            int a = random.nextInt(-1000000, 1000000);
+            int b = random.nextInt(-1000000, 1000000);
 
             int[] result = eea(a, b);
 
@@ -89,8 +89,30 @@ public class NumberTheorieTest {
             else{
                 int result = modularInverse(a, m);
                 assertEquals(BigInteger.valueOf(a).modInverse(BigInteger.valueOf(m)), BigInteger.valueOf(result), inputs);
-                assertEquals(1, ((long) a * result) % m, inputs);
+                assertEquals(1, Math.floorMod(((long) a * result), m), inputs);
             }
         }
+    }
+    @ParameterizedTest
+    @CsvSource({
+            "1, 10, 1",
+            "9, 10, 9",
+            "11, 10, 1",
+            "-7, 10, 7",
+            "5, 1, 0"
+    })
+    void modularInverseVonGrenzfaellen(int a, int m, int expected){
+        int result = modularInverse(a, m);
+        assertEquals(expected, result);
+
+    }
+    @ParameterizedTest
+    @CsvSource({
+            "4, 6",
+            "0, 10",
+            "5, 0"
+    })
+    void modularInverseVonGrenzfaellenWithException(int a, int m){
+            assertThrows(IllegalArgumentException.class, () -> modularInverse(a, m));
     }
 }

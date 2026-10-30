@@ -3,16 +3,21 @@ package aba.math;
 public class NumberTheorie {
     public static int gcd(int inputr0, int inputr1){
         if(inputr1 == 0){
-            return inputr0;
+            return Math.abs(inputr0);
         }
         else{
-            return gcd(inputr1, inputr0 % inputr1);
+            return gcd(Math.abs(inputr1), Math.abs(inputr0 % inputr1));
         }
     }
 
     public static int[] eea(int r0, int r1){
         if (r1 == 0){
-            return new int[]{r0,1,0};
+            if(r0 < 0){
+                return new int[]{-r0,-1,0};
+            }
+            else {
+                return new int[]{Math.abs(r0), 1, 0};
+            }
         }
 
         int[] result = eea(r1, r0 % r1);
@@ -43,11 +48,14 @@ public class NumberTheorie {
         return result;
     }
 
-    public static int modularInverse(int a, int p) {
-        int[] result = eea (p,a);
+    public static int modularInverse(int a, int m) {
+        if (m<=0){
+            throw new IllegalArgumentException("Modul is not good");
+        }
+        int[] result = eea (m,(a%m+m)%m);
         if (result[0] != 1){
             throw new IllegalArgumentException("There is no modular Inverse");
         }
-        return ((result[2]%p)+p)%p;
+        return ((result[2]%m)+m)%m;
     }
 }
