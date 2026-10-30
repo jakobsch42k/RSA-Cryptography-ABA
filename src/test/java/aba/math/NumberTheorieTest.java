@@ -115,4 +115,29 @@ public class NumberTheorieTest {
     void modularInverseVonGrenzfaellenWithException(int a, int m){
             assertThrows(IllegalArgumentException.class, () -> modularInverse(a, m));
     }
+
+    @Test
+    void phiBis2000(){
+        for (int i = 1; i <= 2000; i++){
+            int result = phi(i);
+            int expected = 0;
+            for (int k = 1; k <= i; k++){
+                if(BigInteger.valueOf(k).gcd(BigInteger.valueOf(i)).equals(BigInteger.ONE)){
+                    expected++;
+                }
+            }
+            assertEquals(expected, result, "i=" + i);
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "1, 1",
+            "7, 6",
+            "9, 6"
+    })
+    void phiBeiGrenzfaellen(int i, int expected){
+        int result = phi(i);
+        assertEquals(expected, result, "i=" + i);
+    }
 }
