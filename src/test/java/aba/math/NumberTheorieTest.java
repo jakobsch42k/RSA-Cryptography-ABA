@@ -68,15 +68,15 @@ public class NumberTheorieTest {
         Random random = new Random(42);
         for (int i = 0; i < 10000; i++) {
 
-            int a = random.nextInt(-1000000, 1000000);
-            int b = random.nextInt(-1000000, 1000000);
+            BigInteger a = randomPosNeg(random);
+            BigInteger b = randomPosNeg(random);
 
-            int[] result = eea(a, b);
+            EEARecord result = eea(a, b);
 
             String inputs = "a= " + a + ", b= " + b;
 
-            assertEquals(BigInteger.valueOf(a).gcd(BigInteger.valueOf(b)), BigInteger.valueOf(result[0]), inputs);
-            assertEquals((long)a * result[1] + (long) b * result[2], result[0], inputs);
+            assertEquals(a.gcd(b), result.gcd(), inputs);
+            assertEquals(a.multiply(result.s()).add(b.multiply(result.t())), result.gcd(), inputs);
         }
     }
     @ParameterizedTest
@@ -85,15 +85,16 @@ public class NumberTheorieTest {
             "8, 8, 8",
             "0, 1, 1",
             "6, 10, 2",
-            "22, 25, 1"
+            "22, 25, 1",
+            "-22, 25, 1"
 
     })
-    void eeaGiltBeiGrenzfaellen(int a, int b, int expected){
+    void eeaGiltBeiGrenzfaellen(BigInteger a, BigInteger b, BigInteger expected){
 
-         int[] result = eea(a, b);
+         EEARecord result = eea(a, b);
 
-         assertEquals(expected, result[0]);
-         assertEquals((long)a * result[1] + (long) b * result[2], result[0]);
+         assertEquals(expected, result.gcd());
+        assertEquals(a.multiply(result.s()).add(b.multiply(result.t())), result.gcd());
     }
     @Test
     void modularInverseVonZufallszahlenGegenBigInt(){

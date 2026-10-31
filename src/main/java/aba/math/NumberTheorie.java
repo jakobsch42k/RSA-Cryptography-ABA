@@ -35,6 +35,28 @@ public class NumberTheorie {
 
     }
 
+    public static EEARecord eea(BigInteger r0, BigInteger r1){
+        if (r1.equals(BigInteger.ZERO)){
+            if(r0.compareTo(BigInteger.ZERO) < 0){
+                return new EEARecord(BigInteger.valueOf(-1), BigInteger.ZERO, r0.negate());
+            }
+            else {
+                return new EEARecord(BigInteger.ONE, BigInteger.ZERO, r0.abs());
+            }
+        }
+
+        EEARecord result = eea(r1, r0.remainder(r1));
+        BigInteger gcd = result.gcd();
+        BigInteger s1 = result.s();
+        BigInteger t1 = result.t();
+
+        BigInteger s = t1;
+        BigInteger t = s1.subtract((r0.divide(r1)).multiply(t1));
+
+        return new EEARecord(s, t, gcd);
+
+    }
+
     public static int phi(int m){
         int result = m;
         for (int p=2;p*p<=m;p++){
