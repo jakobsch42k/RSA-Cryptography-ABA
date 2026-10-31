@@ -1,12 +1,15 @@
 package aba.math;
 
+import java.math.BigInteger;
+
 public class NumberTheorie {
-    public static int gcd(int inputr0, int inputr1){
-        if(inputr1 == 0){
-            return Math.abs(inputr0);
+
+    public static BigInteger gcd(BigInteger inputr0, BigInteger inputr1){
+        if(inputr1.equals(BigInteger.ZERO)){
+            return inputr0.abs();
         }
         else{
-            return gcd(Math.abs(inputr1), Math.abs(inputr0 % inputr1));
+            return gcd(inputr1.abs(), inputr0.mod(inputr1.abs()));
         }
     }
 

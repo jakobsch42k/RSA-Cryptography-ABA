@@ -18,14 +18,14 @@ public class NumberTheorieTest {
         Random random = new Random(42);
         for (int i = 0; i < 10000; i++){
 
-            int a = random.nextInt(-1000000, 1000000);
-            int b = random.nextInt(-1000000, 1000000);
+            BigInteger a = randomPosNeg(random);
+            BigInteger b = randomPosNeg(random);
 
-            int result = gcd(a, b);
+            BigInteger result = gcd(a, b);
 
             String inputs = "a= " + a + ", b= " + b;
 
-            assertEquals((BigInteger.valueOf(b)).gcd(BigInteger.valueOf(a)), BigInteger.valueOf(result), inputs);
+            assertEquals(b.gcd(a), result, inputs);
         }
     }
     @ParameterizedTest
@@ -34,14 +34,34 @@ public class NumberTheorieTest {
             "8, 8, 8",
             "0, 1, 1",
             "6, 10, 2",
-            "22, 25, 1"
+            "22, 25, 1",
+            "-8, 0, 8",
 
     })
-    void gcdStimmtBeiGrenzfaellen(int a, int b, int expected){
+    void gcdStimmtBeiGrenzfaellen(BigInteger a, BigInteger b, BigInteger expected){
 
-        int result1 = gcd(a, b);
+        BigInteger result1 = gcd(a, b);
 
         assertEquals(expected, result1);
+    }
+    @Test
+    void gcdStimmtBeiGrossenZufallszahlGegenBigInt(){
+        Random random = new Random(42);
+        for (int i = 0; i < 1000; i++){
+
+            BigInteger x = randomPosNeg(random);
+            BigInteger y = randomPosNeg(random);
+            BigInteger c = new BigInteger(512, random);
+
+            BigInteger a = x.multiply(c);
+            BigInteger b = y.multiply(c);
+
+            BigInteger result = gcd(a, b);
+
+            String inputs = "a= " + a + ", b= " + b;
+
+            assertEquals(b.gcd(a), result, inputs);
+        }
     }
     @Test
     void eeaGiltBeiVielenZufallszahlenGegenBigInt(){
@@ -139,5 +159,13 @@ public class NumberTheorieTest {
     void phiBeiGrenzfaellen(int i, int expected){
         int result = phi(i);
         assertEquals(expected, result, "i=" + i);
+    }
+
+    private static BigInteger randomPosNeg(Random random){
+        BigInteger output = new BigInteger(512, random);
+        if(random.nextBoolean()){
+            output = output.negate();
+        }
+        return output;
     }
 }
