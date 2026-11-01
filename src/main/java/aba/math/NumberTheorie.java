@@ -73,14 +73,14 @@ public class NumberTheorie {
         return result;
     }
 
-    public static int modularInverse(int a, int m) {
-        if (m<=0){
+    public static BigInteger modularInverse(BigInteger a, BigInteger m) {
+        if (m.compareTo(BigInteger.ONE) < 0){
             throw new IllegalArgumentException("Modul is not good");
         }
-        int[] result = eea (m,(a%m+m)%m);
-        if (result[0] != 1){
+        EEARecord result = eea(m, a.mod(m));
+        if (!result.gcd().equals(BigInteger.ONE)){
             throw new IllegalArgumentException("There is no modular Inverse");
         }
-        return ((result[2]%m)+m)%m;
+        return result.t().mod(m);
     }
 }

@@ -79,6 +79,26 @@ public class NumberTheorieTest {
             assertEquals(a.multiply(result.s()).add(b.multiply(result.t())), result.gcd(), inputs);
         }
     }
+    @Test
+    void eeaGiltBeiVielenGrossenZufallszahlenGegenBigInt(){
+        Random random = new Random(42);
+        for (int i = 0; i < 10000; i++) {
+
+            BigInteger x = randomPosNeg(random);
+            BigInteger y = randomPosNeg(random);
+            BigInteger c = new BigInteger(512, random);
+
+            BigInteger a = x.multiply(c);
+            BigInteger b = y.multiply(c);
+
+            EEARecord result = eea(a, b);
+
+            String inputs = "a= " + a + ", b= " + b;
+
+            assertEquals(a.gcd(b), result.gcd(), inputs);
+            assertEquals(a.multiply(result.s()).add(b.multiply(result.t())), result.gcd(), inputs);
+        }
+    }
     @ParameterizedTest
     @CsvSource({
             "8, 0, 8",
@@ -100,17 +120,17 @@ public class NumberTheorieTest {
     void modularInverseVonZufallszahlenGegenBigInt(){
         Random random = new Random(7);
         for (int i = 0; i < 10000; i++) {
-            int a = random.nextInt(0, 1000000);
-            int m = random.nextInt(2, 1000000);
+            BigInteger a = randomPosNeg(random);
+            BigInteger m = new BigInteger(512, random);
             String inputs = "a= " + a + ", m= " + m;
 
-            if(BigInteger.valueOf(a).gcd(BigInteger.valueOf(m)).compareTo(BigInteger.valueOf(1)) > 0){
+            if(a.gcd(m).compareTo(BigInteger.ONE) > 0){
                 assertThrows(IllegalArgumentException.class, () -> modularInverse(a, m), inputs);
             }
             else{
-                int result = modularInverse(a, m);
-                assertEquals(BigInteger.valueOf(a).modInverse(BigInteger.valueOf(m)), BigInteger.valueOf(result), inputs);
-                assertEquals(1, Math.floorMod(((long) a * result), m), inputs);
+                BigInteger result = modularInverse(a, m);
+                assertEquals(a.modInverse(m), result, inputs);
+                assertEquals(BigInteger.ONE, a.multiply(result).mod(m), inputs);
             }
         }
     }
@@ -122,8 +142,8 @@ public class NumberTheorieTest {
             "-7, 10, 7",
             "5, 1, 0"
     })
-    void modularInverseVonGrenzfaellen(int a, int m, int expected){
-        int result = modularInverse(a, m);
+    void modularInverseVonGrenzfaellen(BigInteger a, BigInteger m, BigInteger expected){
+        BigInteger result = modularInverse(a, m);
         assertEquals(expected, result);
 
     }
@@ -133,7 +153,7 @@ public class NumberTheorieTest {
             "0, 10",
             "5, 0"
     })
-    void modularInverseVonGrenzfaellenWithException(int a, int m){
+    void modularInverseVonGrenzfaellenWithException(BigInteger a, BigInteger m){
             assertThrows(IllegalArgumentException.class, () -> modularInverse(a, m));
     }
 
